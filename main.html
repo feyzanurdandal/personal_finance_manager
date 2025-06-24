@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gelişmiş Kişisel Finans Yöneticisi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen - Giriş Ekranı -->
+    <div id="loginScreen" class="login-screen">
+        <!-- Login container - giriş formu container'ı -->
+        <div class="login-container">
+            <!-- Uygulama başlığı -->
+            <h1>💰 Finans Yöneticisi</h1>
+            
+            <div id="loginForm">
+                <!-- Kullanıcı adı form grubu -->
+                <div class="form-group">
+                    <label for="username">Kullanıcı Adı:</label>
+                    <input type="text" id="username" required>
+                </div>
+                <!-- Şifre form grubu -->
+                <div class="form-group">
+                    <label for="password">Şifre:</label>
+                    <input type="password" id="password" required>
+                </div>
+                <!-- Giriş yap butonu -->
+                <button class="btn" onclick="login()">Giriş Yap</button>
+                <!-- Kayıt ol butonu -->
+                <button class="btn btn-secondary" onclick="showRegister()">Kayıt Ol</button>
+            </div>
+            
+            <!-- Kayıt formu (başlangıçta gizli) -->
+            <div id="registerForm" class="hidden">
+                <!-- Ad soyad form grubu -->
+                <div class="form-group">
+                    <label for="regFullName">Ad Soyad:</label>
+                    <input type="text" id="regFullName" required>
+                </div>
+                <!-- Kullanıcı adı form grubu -->
+                <div class="form-group">
+                    <label for="regUsername">Kullanıcı Adı:</label>
+                    <input type="text" id="regUsername" required>
+                </div>
+                <!-- Şifre form grubu -->
+                <div class="form-group">
+                    <label for="regPassword">Şifre:</label>
+                    <input type="password" id="regPassword" required>
+                </div>
+                <!-- E-posta form grubu -->
+                <div class="form-group">
+                    <label for="regEmail">E-posta:</label>
+                    <input type="email" id="regEmail" required>
+                </div>
+                <!-- Kayıt ol butonu -->
+                <button class="btn btn-success" onclick="register()">Kayıt Ol</button>
+                <!-- Giriş ekranına dön butonu -->
+                <button class="btn btn-secondary" onclick="showLogin()">Giriş Ekranına Dön</button>
+            </div>
+            <!-- Kimlik doğrulama mesaj alanı -->
+            <div id="authMessage"></div>
+        </div>
+    </div>
+
+    <!-- Main Application - Ana Uygulama (başlangıçta gizli) -->
+    <div id="mainApp" class="container hidden">
+        <!-- Header - Üst başlık bölümü -->
+        <div class="header">
+            <!-- Header içerik -->
+            <div class="header-content">
+                <h1>💰 Kişisel Finans Yöneticisi</h1>
+                <p>Gelir ve giderlerinizi kolayca takip edin ve kontrol altında tutun</p>
+            </div>
+            <!-- Kullanıcı bilgileri -->
+            <div class="user-info">
+                <h3>Hoş geldin, <span id="currentUserName"></span>!</h3>
+                <button class="btn btn-logout" onclick="logout()">Çıkış Yap</button>
+            </div>
+        </div>
+
+        <!-- Ana içerik bölümü -->
+        <div class="main-content">
+            <!-- Özet Kartları - toplam gelir, gider, bakiye gösterimi -->
+            <div class="summary-cards">
+                <!-- Toplam gelir kartı -->
+                <div class="card income">
+                    <h3>📈 Toplam Gelir</h3>
+                    <div class="amount" id="totalIncome">₺0.00</div>
+                </div>
+                <!-- Toplam gider kartı -->
+                <div class="card expense">
+                    <h3>📉 Toplam Gider</h3>
+                    <div class="amount" id="totalExpense">₺0.00</div>
+                </div>
+                <!-- Net bakiye kartı -->
+                <div class="card balance">
+                    <h3>💳 Net Bakiye</h3>
+                    <div class="amount" id="netBalance">₺0.00</div>
+                </div>
+            </div>  
+
+            <!-- Grafik Gösterimi - pasta grafiği container'ı -->
+            <div class="chart-container">
+                <h3 class="chart-title">📊 Gelir-Gider Grafiği</h3>
+                <!-- Canvas elementi grafik çizimi için -->
+                <canvas id="incomeExpenseChart" width="400" height="400"></canvas>
+            </div>
+
+            <!-- Kategori Analizi - gider kategorilerinin analizi -->
+            <div class="category-analysis">
+                <h3 class="section-title">🏷️ Kategori Bazlı Analiz</h3>
+                <!-- Kategori istatistikleri container'ı -->
+                <div class="category-stats" id="categoryStats"></div>
+            </div>
+
+            <!-- Kategori Yönetimi - yeni kategori ekleme ve mevcut kategorileri görüntüleme -->
+            <div class="category-manager">
+                <h3>🏷️ Gider Kategori Yönetimi</h3>
+                <div class="form-row">
+                    <!-- Yeni kategori girişi -->
+                    <div class="form-group">
+                        <input type="text" id="newCategory" placeholder="Yeni kategori adı">
+                    </div>
+                    <!-- Kategori ekleme butonu -->
+                    <div class="form-group">
+                        <button class="btn btn-success" onclick="addCategory()">Kategori Ekle</button>
+                    </div>
+                </div>
+                <!-- Mevcut kategorilerin listesi -->
+                <div class="category-list" id="categoryList"></div>
+            </div>
+
+            <!-- VERİ EKLEME FORMU BÖLÜMÜ -->
+            <!-- Bu bölüm yeni gelir/gider kayıtları eklemek için kullanılır -->
+            <div class="form-section">
+                <!-- Bölüm başlığı - emoji ile görsel zenginlik -->
+                <h3>➕ Yeni Kayıt Ekle</h3>
+                
+                <!-- Ana form elementi - JavaScript ile işlenecek -->
+                <form id="transactionForm">
+                    
+                    <!-- İlk satır: Tür, Miktar ve Tarih alanları -->
+                    <div class="form-row">
+                        
+                        <!-- Tür seçimi (Gelir/Gider) -->
+                        <div class="form-group">
+                            <label for="type">Tür:</label>
+                            <select id="type" required>
+                                <option value="">Seçiniz</option>        <!-- Varsayılan boş seçenek -->
+                                <option value="income">Gelir</option>     <!-- Gelir seçeneği -->
+                                <option value="expense">Gider</option>    <!-- Gider seçeneği -->
+                            </select>
+                        </div>
+                        
+                        <!-- Miktar girişi - para birimi Türk Lirası -->
+                        <div class="form-group">
+                            <label for="amount">Miktar (₺):</label>
+                            <!-- number input: ondalık destekli, minimum 0, gerekli alan -->
+                            <input type="number" id="amount" step="0.01" min="0" required>
+                        </div>
+                        
+                        <!-- Tarih seçimi -->
+                        <div class="form-group">
+                            <label for="date">Tarih:</label>
+                            <input type="date" id="date" required>  <!-- HTML5 tarih seçici -->
+                        </div>
+                    </div>
+                    
+                    <!-- İkinci satır: Açıklama ve Kategori alanları -->
+                    <div class="form-row">
+                        
+                        <!-- Açıklama metni -->
+                        <div class="form-group">
+                            <label for="description">Açıklama:</label>
+                            <input type="text" id="description" required>
+                        </div>
+                        
+                        <!-- Kategori seçimi - başlangıçta gizli (JavaScript ile kontrol edilir) -->
+                        <div class="form-group" id="categoryGroup" style="display:none;">
+                            <label for="category">Kategori:</label>
+                            <!-- Seçenekler JavaScript ile dinamik olarak doldurulacak -->
+                            <select id="category"></select>
+                        </div>
+                    </div>
+                    
+                    <!-- Form gönderme butonu -->
+                    <button type="submit" class="btn">Kayıt Ekle</button>
+                </form>
+                
+                <!-- Mesaj gösterme alanı (başarı/hata mesajları için) -->
+                <div id="messageArea"></div>
+            </div>
+
+            <!-- CSV DOSYA İŞLEMLERİ BÖLÜMÜ -->
+            <!-- Bu bölüm veri içe/dışa aktarma işlemleri için -->
+            <div class="csv-section">
+                <!-- Bölüm başlığı -->
+                <h3>📁 CSV Dosya İşlemleri</h3>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <!-- CSV olarak dışa aktarma butonu -->
+                        <!-- onclick ile JavaScript fonksiyonu çağrılır -->
+                        <button class="btn btn-success" onclick="exportToCSV()">CSV Olarak İndir</button>
+                        
+                        <!-- Dosya seçme input'u - gizli tutulur -->
+                        <!-- Sadece .csv dosyalarını kabul eder -->
+                        <input type="file" id="csvFileInput" accept=".csv" style="display:none;">
+                        
+                        <!-- CSV yükleme butonu - gizli file input'u tetikler -->
+                        <button class="btn" onclick="document.getElementById('csvFileInput').click()">CSV Yükle</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VERİ TABLOSU BÖLÜMÜ -->
+            <!-- Bu bölüm mevcut kayıtları tablo halinde gösterir -->
+            <div class="data-section">
+                <!-- Bölüm başlığı -->
+                <h2 class="section-title">📊 Kayıtlarım</h2>
+                
+                <!-- Tablo container'ı - responsive tasarım için -->
+                <div class="table-container">
+                    <!-- Ana veri tablosu -->
+                    <table id="transactionTable">
+                        <!-- Tablo başlık satırı -->
+                        <thead>
+                            <tr>
+                                <th>Tarih</th>      <!-- Tarih sütunu -->
+                                <th>Tür</th>        <!-- Gelir/Gider sütunu -->
+                                <th>Açıklama</th>   <!-- Açıklama sütunu -->
+                                <th>Kategori</th>   <!-- Kategori sütunu -->
+                                <th>Miktar</th>     <!-- Para miktarı sütunu -->
+                                <th>İşlemler</th>   <!-- Düzenle/Sil butonları sütunu -->
+                            </tr>
+                        </thead>
+                        
+                        <!-- Tablo gövdesi - JavaScript ile dinamik olarak doldurulacak -->
+                        <tbody id="transactionTableBody">
+                            <!-- Veri satırları buraya JavaScript ile eklenecek -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        
+        // Global değişkenler
+        let currentUser = null; // Şu anda giriş yapmış kullanıcı
+        let users = []; // Tüm kullanıcıların listesi
+        let transactions = []; // Aktif kullanıcının işlemleri
+        let categories = ['Yiyecek', 'Ulaşım', 'Eğlence', 'Faturalar', 'Alışveriş', 'Sağlık', 'Eğitim']; // Varsayılan kategoriler
+
+        // === USER AUTHENTICATION SYSTEM ===
+        
+        // Sayfa yüklendiğinde çalışacak fonksiyon
+        document.addEventListener('DOMContentLoaded', function() { // DOM yüklenince çalış
+            loadUsersFromStorage(); // Kullanıcıları localStorage'dan yükle
+            checkAutoLogin(); // Otomatik giriş kontrolü yap
+            
+            // Form gönderimi için olay dinleyicisi
+            document.getElementById('transactionForm').addEventListener('submit', handleFormSubmit); // İşlem formu gönderilince handleFormSubmit'i çalıştır
+            
+            // Tür değiştiğinde kategori alanını göster/gizle
+            document.getElementById('type').addEventListener('change', toggleCategoryField); // Gelir/gider seçimi değişince kategori alanını ayarla
+            
+            // CSV dosya yükleme
+            document.getElementById('csvFileInput').addEventListener('change', handleCSVUpload); // CSV dosya seçilince yükleme fonksiyonunu çalıştır
+        });
+
+        // Otomatik giriş kontrolü
+        function checkAutoLogin() { // Otomatik giriş kontrol fonksiyonu
+            const savedUser = localStorage.getItem('currentUser'); // localStorage'dan kullanıcı bilgisini al
+            if (savedUser) { // Eğer kaydedilmiş kullanıcı varsa
+                currentUser = JSON.parse(savedUser); // JSON'dan objeye çevir
+                showMainApp(); // Ana uygulamayı göster
+            }
+        }
+
+        // Kullanıcı kayıt
+        function register() { // Kayıt fonksiyonu
+            const fullName = document.getElementById('regFullName').value.trim(); // Ad soyad al ve boşlukları temizle
+            const username = document.getElementById('regUsername').value.trim(); // Kullanıcı adını al ve boşlukları temizle
+            const password = document.getElementById('regPassword').value; // Şifreyi al
+            const email = document.getElementById('regEmail').value.trim(); // Email'i al ve boşlukları temizle
+
+            if (!fullName || !username || !password || !email) { // Eğer herhangi bir alan boşsa
+                showAuthMessage('Lütfen tüm alanları doldurun!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            // Kullanıcı adı kontrolü
+            if (users.find(u => u.username === username)) { // Aynı kullanıcı adı var mı kontrol et
+                showAuthMessage('Bu kullanıcı adı zaten kullanılıyor!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            // Email kontrolü
+            if (users.find(u => u.email === email)) { // Aynı email var mı kontrol et
+                showAuthMessage('Bu e-posta adresi zaten kullanılıyor!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            // Yeni kullanıcı oluştur
+            const newUser = { // Yeni kullanıcı objesi oluştur
+                id: Date.now(), // Benzersiz ID için şu anki zamanı kullan
+                fullName, // Ad soyad
+                username, // Kullanıcı adı
+                password, // Şifre (gerçek uygulamada hash'lenmeli)
+                email, // Email
+                createdAt: new Date().toISOString(), // Oluşturulma tarihi
+                transactions: [], // Boş işlemler dizisi
+                categories: [...categories] // Varsayılan kategorilerin kopyası
+            };
+
+            users.push(newUser); // Yeni kullanıcıyı diziye ekle
+            saveUsersToStorage(); // Kullanıcıları kaydet
+            
+            showAuthMessage('Kayıt başarılı! Şimdi giriş yapabilirsiniz.', 'success'); // Başarı mesajı göster
+            setTimeout(() => { // 1.5 saniye sonra
+                showLogin(); // Giriş formuna geç
+            }, 1500);
+        }
+
+        // Kullanıcı girişi
+        function login() { // Giriş fonksiyonu
+            const username = document.getElementById('username').value.trim(); // Kullanıcı adını al
+            const password = document.getElementById('password').value; // Şifreyi al
+
+            if (!username || !password) { // Eğer kullanıcı adı veya şifre boşsa
+                showAuthMessage('Kullanıcı adı ve şifre gerekli!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            const user = users.find(u => u.username === username && u.password === password); // Kullanıcıyı bul
+            
+            if (user) { // Kullanıcı bulunduysa
+                currentUser = user; // Mevcut kullanıcıyı ayarla
+                localStorage.setItem('currentUser', JSON.stringify(user)); // localStorage'a kaydet
+                showMainApp(); // Ana uygulamayı göster
+            } else { // Kullanıcı bulunamadıysa
+                showAuthMessage('Hatalı kullanıcı adı veya şifre!', 'error'); // Hata mesajı göster
+            }
+        }
+
+        // Çıkış yap
+        function logout() { // Çıkış fonksiyonu
+            if (confirm('Çıkış yapmak istediğinizden emin misiniz?')) { // Onay al
+                currentUser = null; // Mevcut kullanıcıyı sıfırla
+                localStorage.removeItem('currentUser'); // localStorage'dan sil
+                document.getElementById('loginScreen').classList.remove('hidden'); // Giriş ekranını göster
+                document.getElementById('mainApp').classList.add('hidden'); // Ana uygulamayı gizle
+                
+                // Formu temizle
+                document.getElementById('username').value = ''; // Kullanıcı adı alanını temizle
+                document.getElementById('password').value = ''; // Şifre alanını temizle
+                showLogin(); // Giriş formunu göster
+            }
+        }
+
+        // Ana uygulamayı göster
+        function showMainApp() { // Ana uygulama gösterme fonksiyonu
+            document.getElementById('loginScreen').classList.add('hidden'); // Giriş ekranını gizle
+            document.getElementById('mainApp').classList.remove('hidden'); // Ana uygulamayı göster
+            document.getElementById('currentUserName').textContent = currentUser.fullName; // Kullanıcı adını göster
+            
+            // Kullanıcı verilerini yükle
+            transactions = currentUser.transactions || []; // İşlemleri yükle (yoksa boş dizi)
+            categories = currentUser.categories || [...categories]; // Kategorileri yükle
+            
+            initializeApp(); // Uygulamayı başlat
+        }
+
+        // Login/Register form değiştirme
+        function showLogin() { // Giriş formunu gösterme fonksiyonu
+            document.getElementById('loginForm').classList.remove('hidden'); // Giriş formunu göster
+            document.getElementById('registerForm').classList.add('hidden'); // Kayıt formunu gizle
+            clearAuthMessage(); // Mesajları temizle
+        }
+
+        function showRegister() { // Kayıt formunu gösterme fonksiyonu
+            document.getElementById('loginForm').classList.add('hidden'); // Giriş formunu gizle
+            document.getElementById('registerForm').classList.remove('hidden'); // Kayıt formunu göster
+            clearAuthMessage(); // Mesajları temizle
+        }
+
+        // Auth mesaj gösterme
+        function showAuthMessage(message, type) { // Kimlik doğrulama mesajı gösterme fonksiyonu
+            const messageArea = document.getElementById('authMessage'); // Mesaj alanını al
+            messageArea.innerHTML = `<div class="${type === 'success' ? 'success-message' : 'error-message'}">${message}</div>`; // Mesajı göster
+        }
+
+        function clearAuthMessage() { // Kimlik doğrulama mesajını temizleme fonksiyonu
+            document.getElementById('authMessage').innerHTML = ''; // Mesaj alanını temizle
+        }
+
+        // Kullanıcıları storage'dan yükle
+        function loadUsersFromStorage() { // Kullanıcıları localStorage'dan yükleme fonksiyonu
+            const savedUsers = localStorage.getItem('financeAppUsers'); // Kaydedilmiş kullanıcıları al
+            if (savedUsers) { // Eğer kaydedilmiş kullanıcılar varsa
+                users = JSON.parse(savedUsers); // JSON'dan diziye çevir
+            }
+        }
+
+        // Kullanıcıları storage'a kaydet
+        function saveUsersToStorage() { // Kullanıcıları localStorage'a kaydetme fonksiyonu
+            localStorage.setItem('financeAppUsers', JSON.stringify(users)); // Kullanıcıları JSON olarak kaydet
+        }
+
+        // === MAIN APPLICATION FUNCTIONS ===
+
+        // Uygulamayı başlat
+        function initializeApp() { // Uygulama başlatma fonksiyonu
+            updateCategoryList(); // Kategori listesini güncelle
+            updateCategorySelect(); // Kategori seçim listesini güncelle
+            updateDisplay(); // Ekranı güncelle
+            updateCategoryAnalysis(); // Kategori analizini güncelle
+            drawChart(); // Grafiği çiz
+            setTodayDate(); // Bugünün tarihini ayarla
+        }
+
+        // Bugünün tarihini form alanına set et
+        function setTodayDate() { // Bugünün tarihini ayarlama fonksiyonu
+            const today = new Date().toISOString().split('T')[0]; // Bugünün tarihini YYYY-MM-DD formatında al
+            document.getElementById('date').value = today; // Tarih alanına bugünün tarihini yaz
+        }
+
+        // Kategori alanını göster/gizle
+        function toggleCategoryField() { // Kategori alanını açma/kapama fonksiyonu
+            const type = document.getElementById('type').value; // Seçilen türü al
+            const categoryGroup = document.getElementById('categoryGroup'); // Kategori grubunu al
+            
+            if (type === 'expense') { // Eğer gider seçildiyse
+                categoryGroup.style.display = 'block'; // Kategori alanını göster
+                document.getElementById('category').required = true; // Kategori seçimini zorunlu yap
+            } else { // Değilse
+                categoryGroup.style.display = 'none'; // Kategori alanını gizle
+                document.getElementById('category').required = false; // Kategori seçimini isteğe bağlı yap
+            }
+        }
+
+        // Form gönderimi işleme
+        function handleFormSubmit(e) { // Form gönderim işleme fonksiyonu
+            e.preventDefault(); // Varsayılan form gönderimini engelle
+            
+            const formData = { // Form verilerini al
+                type: document.getElementById('type').value, // Tür
+                amount: parseFloat(document.getElementById('amount').value), // Miktar (sayıya çevir)
+                date: document.getElementById('date').value, // Tarih
+                description: document.getElementById('description').value, // Açıklama
+                category: document.getElementById('category').value || '' // Kategori (yoksa boş string)
+            };
+
+            // Form doğrulama
+            if (!validateForm(formData)) { // Form geçerli değilse
+                return; // Fonksiyondan çık
+            }
+
+            // Yeni işlem ekle
+            addTransaction(formData); // İşlemi ekle
+            
+            // Formu temizle
+            document.getElementById('transactionForm').reset(); // Formu sıfırla
+            setTodayDate(); // Bugünün tarihini tekrar ayarla
+            toggleCategoryField(); // Kategori alanını ayarla
+            
+            showMessage('Kayıt başarıyla eklendi!', 'success'); // Başarı mesajı göster
+        }
+
+        // Form doğrulama
+        function validateForm(data) { // Form doğrulama fonksiyonu
+            if (!data.type || !data.amount || !data.date || !data.description) { // Gerekli alanlar boşsa
+                showMessage('Lütfen tüm gerekli alanları doldurun!', 'error'); // Hata mesajı göster
+                return false; // Geçersiz
+            }
+
+            if (data.amount <= 0) { // Miktar sıfır veya negatifse
+                showMessage('Miktar pozitif bir değer olmalıdır!', 'error'); // Hata mesajı göster
+                return false; // Geçersiz
+            }
+
+            if (data.type === 'expense' && !data.category) { // Gider türü seçilmiş ama kategori yoksa
+                showMessage('Gider için kategori seçimi zorunludur!', 'error'); // Hata mesajı göster
+                return false; // Geçersiz
+            }
+
+            const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // Tarih formatını kontrol eden regex
+            if (!dateRegex.test(data.date)) { // Tarih formatı yanlışsa
+                showMessage('Geçerli bir tarih giriniz!', 'error'); // Hata mesajı göster
+                return false; // Geçersiz
+            }
+
+            return true; // Geçerli
+        }
+
+        // Yeni işlem ekleme
+        function addTransaction(data) { // İşlem ekleme fonksiyonu
+            const transaction = { // Yeni işlem objesi
+                id: Date.now(), // Benzersiz ID
+                userId: currentUser.id, // Kullanıcı ID'si
+                ...data, // Form verilerini ekle
+                timestamp: new Date().toISOString() // Ekleme zamanı
+            };
+
+            transactions.push(transaction); // İşlemi diziye ekle
+            saveUserData(); // Kullanıcı verilerini kaydet
+            updateDisplay(); // Ekranı güncelle
+            updateCategoryAnalysis(); // Kategori analizini güncelle
+            drawChart(); // Grafiği yeniden çiz
+        }
+
+        // İşlem silme
+        function deleteTransaction(id) { // İşlem silme fonksiyonu
+            if (confirm('Bu kaydı silmek istediğinizden emin misiniz?')) { // Onay al
+                transactions = transactions.filter(t => t.id !== parseInt(id)); // İşlemi diziden çıkar
+                saveUserData(); // Kullanıcı verilerini kaydet
+                updateDisplay(); // Ekranı güncelle
+                updateCategoryAnalysis(); // Kategori analizini güncelle
+                drawChart(); // Grafiği yeniden çiz
+                showMessage('Kayıt başarıyla silindi!', 'success'); // Başarı mesajı göster
+            }
+        }
+
+        // Kategori ekleme
+        function addCategory() { // Kategori ekleme fonksiyonu
+            const newCategory = document.getElementById('newCategory').value.trim(); // Yeni kategori adını al
+            
+            if (!newCategory) { // Kategori adı boşsa
+                showMessage('Kategori adı boş olamaz!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            if (categories.includes(newCategory)) { // Kategori zaten varsa
+                showMessage('Bu kategori zaten mevcut!', 'error'); // Hata mesajı göster
+                return; // Fonksiyondan çık
+            }
+
+            categories.push(newCategory); // Kategoriyi diziye ekle
+            document.getElementById('newCategory').value = ''; // Input alanını temizle
+            updateCategoryList(); // Kategori listesini güncelle
+            updateCategorySelect(); // Kategori seçim listesini güncelle
+            saveUserData(); // Kullanıcı verilerini kaydet
+            showMessage('Kategori başarıyla eklendi!', 'success'); // Başarı mesajı göster
+        }
+
+        // Kategori silme
+        function removeCategory(categoryName) { // Kategori silme fonksiyonu
+            if (confirm(`"${categoryName}" kategorisini silmek istediğinizden emin misiniz?`)) { // Onay al
+                // Önce bu kategoriye ait giderleri kontrol et
+                const categoryTransactions = transactions.filter(t => t.category === categoryName); // Bu kategorideki işlemleri bul
+                
+                if (categoryTransactions.length > 0) { // Eğer bu kategoride işlemler varsa
+                    if (!confirm(`Bu kategoriye ait ${categoryTransactions.length} gider kaydı var. Kategori silinirse bu kayıtlar "Diğer" kategorisine taşınacak. Devam etmek istiyor musunuz?`)) { // Tekrar onay al
+                        return; // Fonksiyondan çık
+                    }
+                    
+                    // "Diğer" kategorisini ekle (yoksa)
+                    if (!categories.includes('Diğer')) { // "Diğer" kategorisi yoksa
+                        categories.push('Diğer'); // "Diğer" kategorisini ekle
+                    }
+                    
+                    // İlgili işlemleri "Diğer" kategorisine taşı
+                    transactions.forEach(t => { // Her işlem için
+                        if (t.category === categoryName) { // Eğer silinecek kategorideyse
+                            t.category = 'Diğer'; // "Diğer" kategorisine taşı
+                        }
+                    });
+                }
+                
+                // Kategoriyi sil
+                categories = categories.filter(c => c !== categoryName); // Kategoriyi diziden çıkar
+                updateCategoryList(); // Kategori listesini güncelle
+                updateCategorySelect(); // Kategori seçim listesini güncelle
+                updateCategoryAnalysis(); // Kategori analizini güncelle
+                saveUserData(); // Kullanıcı verilerini kaydet
+                showMessage('Kategori başarıyla silindi!', 'success'); // Başarı mesajı göster
+            }
+        }
+
+        // Kullanıcı verilerini kaydetme
+        function saveUserData() { // Kullanıcı verilerini kaydetme fonksiyonu
+            if (currentUser) { // Eğer mevcut kullanıcı varsa
+                currentUser.transactions = transactions; // İşlemleri kullanıcıya ata
+                currentUser.categories = categories; // Kategorileri kullanıcıya ata
+                
+                // Users dizisindeki kullanıcıyı güncelle
+                const userIndex = users.findIndex(u => u.id === currentUser.id); // Kullanıcının dizideki indeksini bul
+                if (userIndex !== -1) { // Kullanıcı bulunduysa
+                    users[userIndex] = currentUser; // Kullanıcıyı güncelle
+                }
+                
+                // Local storage'ı güncelle
+                localStorage.setItem('currentUser', JSON.stringify(currentUser)); // Mevcut kullanıcıyı kaydet
+                saveUsersToStorage(); // Tüm kullanıcıları kaydet
+            }
+        }
+
+        // Kategori listesini güncelleme
+        function updateCategoryList() { // Kategori listesini güncelleme fonksiyonu
+            const categoryList = document.getElementById('categoryList'); // Kategori listesi elementini al
+            categoryList.innerHTML = ''; // Listeyi temizle
+            
+            categories.forEach(category => { // Her kategori için
+                const categoryTag = document.createElement('div'); // Yeni div elementi oluştur
+                categoryTag.className = 'category-tag'; // CSS sınıfını ata
+                categoryTag.innerHTML = `
+                    ${category}
+                    <button class="category-remove" onclick="removeCategory('${category}')" title="Kategoriyi Sil">
+                        ×
+                    </button>
+                `; // İçeriği ayarla
+                categoryList.appendChild(categoryTag); // Listeye ekle
+            });
+        }
+
+        // Kategori select'ini güncelleme
+        function updateCategorySelect() { // Kategori seçim listesini güncelleme fonksiyonu
+            const categorySelect = document.getElementById('category'); // Kategori seçim elementini al
+            categorySelect.innerHTML = '<option value="">Kategori Seçiniz</option>'; // Varsayılan seçeneği ekle
+            
+            categories.forEach(category => { // Her kategori için
+                const option = document.createElement('option'); // Yeni option elementi oluştur
+                option.value = category; // Değeri ayarla
+                option.textContent = category; // Metni ayarla
+                categorySelect.appendChild(option); // Seçim listesine ekle
+            });
+        }
+
+        // Ekranı güncelleme
+        function updateDisplay() { // Ekran güncelleme fonksiyonu
+            updateSummaryCards(); // Özet kartlarını güncelle
+            updateTransactionTable(); // İşlem tablosunu güncelle
+        }
+
+        // Özet kartlarını güncelleme
+        function updateSummaryCards() { // Özet kartlarını güncelleme fonksiyonu
+            const totalIncome = transactions // Toplam geliri hesapla
+                .filter(t => t.type === 'income') // Sadece gelir işlemlerini filtrele
+                .reduce((sum, t) => sum + t.amount, 0); // Miktarları topla
+                
+            const totalExpense = transactions // Toplam gideri hesapla
+                .filter(t => t.type === 'expense') // Sadece gider işlemlerini filtrele
+                .reduce((sum, t) => sum + t.amount, 0); // Miktarları topla
+                
+            const netBalance = totalIncome - totalExpense; // Net bakiyeyi hesapla
+
+            document.getElementById('totalIncome').textContent = formatCurrency(totalIncome); // Toplam geliri göster
+            document.getElementById('totalExpense').textContent = formatCurrency(totalExpense); // Toplam gideri göster
+            document.getElementById('netBalance').textContent = formatCurrency(netBalance); // Net bakiyeyi göster
+            
+            // Bakiye rengi
+            const balanceElement = document.getElementById('netBalance'); // Bakiye elementini al
+            balanceElement.style.color = netBalance >= 0 ? '#28a745' : '#dc3545'; // Pozitifse yeşil, negatifse kırmızı
+        }
+
+        // Para birimi formatı
+        function formatCurrency(amount) { // Para birimi formatlama fonksiyonu
+            return new Intl.NumberFormat('tr-TR', { // Türkçe formatlama
+                style: 'currency', // Para birimi stili
+                currency: 'TRY', // Türk Lirası
+                minimumFractionDigits: 2 // En az 2 ondalık basamak
+            }).format(amount); // Formatla ve döndür
+        }
+
+        // İşlem tablosunu güncelleme
+        function updateTransactionTable() { // İşlem tablosunu güncelleme fonksiyonu
+            const tableBody = document.getElementById('transactionTableBody'); // Tablo gövdesini al
+            tableBody.innerHTML = ''; // Tabloyu temizle
+
+            // İşlemleri tarihe göre sırala (en yeni en üstte)
+            const sortedTransactions = [...transactions].sort((a, b) => new Date(b.date) - new Date(a.date)); // İşlemleri tarihe göre sırala
+
+            sortedTransactions.forEach(transaction => { // Her işlem için
+                const row = document.createElement('tr'); // Yeni tablo satırı oluştur
+                row.innerHTML = ` 
+                    <td>${formatDate(transaction.date)}</td>
+                    <td>
+                        <span class="badge ${transaction.type === 'income' ? 'badge-success' : 'badge-danger'}">
+                            ${transaction.type === 'income' ? '📈 Gelir' : '📉 Gider'}
+                        </span>
+                    </td>
+                    <td>${transaction.description}</td>
+                    <td>${transaction.category || '-'}</td>
+                    <td>
+                        <strong class="${transaction.type === 'income' ? 'text-success' : 'text-danger'}">
+                            ${transaction.type === 'income' ? '+' : '-'}${formatCurrency(Math.abs(transaction.amount))}
+                        </strong>
+                    </td>
+                    <td>
+                        <button class="delete-btn" onclick="deleteTransaction(${transaction.id})" title="Sil">
+                            🗑️ Sil
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(row); // Satırı tabloya ekle
+            });
+
+            // Eğer hiç işlem yoksa mesaj göster
+            if (transactions.length === 0) { // İşlem yoksa
+                const row = document.createElement('tr'); // Yeni satır oluştur
+                row.innerHTML = ` 
+                    <td colspan="6" style="text-align: center; padding: 40px; color: #6c757d;">
+                        📊 Henüz hiç kayıt eklenmemiş. Yukarıdaki formdan yeni kayıt ekleyebilirsiniz.
+                    </td>
+                `;
+                tableBody.appendChild(row); // Satırı tabloya ekle
+            }
+        }
+
+        // Tarih formatı
+        function formatDate(dateString) { // Tarih formatlama fonksiyonu
+            const date = new Date(dateString); // String'i Date objesine çevir
+            return date.toLocaleDateString('tr-TR', { // Türkçe tarih formatı
+                year: 'numeric', // Yıl
+                month: 'long', // Uzun ay adı
+                day: 'numeric' // Gün
+            });
+        }
+
+        // Kategori analizini güncelleme
+        function updateCategoryAnalysis() { // Kategori analiz güncelleme fonksiyonu
+            const categoryStats = document.getElementById('categoryStats'); // Kategori istatistik alanını al
+            categoryStats.innerHTML = ''; // Alanı temizle
+
+            // Gider kategorilerini grupla
+            const expensesByCategory = {}; // Kategoriye göre giderler objesi
+            transactions
+                .filter(t => t.type === 'expense') // Sadece giderleri filtrele
+                .forEach(t => { // Her gider için
+                    const category = t.category || 'Kategorisiz'; // Kategori adını al (yoksa 'Kategorisiz')
+                    expensesByCategory[category] = (expensesByCategory[category] || 0) + t.amount; // Kategori toplamına ekle
+                });
+
+            // Kategori istatistiklerini göster
+            Object.entries(expensesByCategory) // Kategori girişlerini al
+                .sort(([,a], [,b]) => b - a) // Büyükten küçüğe sırala
+                .forEach(([category, amount]) => { // Her kategori için
+                    const totalExpense = transactions // Toplam gideri hesapla
+                        .filter(t => t.type === 'expense') // Sadece giderleri filtrele
+                        .reduce((sum, t) => sum + t.amount, 0); // Topla
+                    
+                    const percentage = totalExpense > 0 ? (amount / totalExpense * 100).toFixed(1) : 0; // Yüzdeyi hesapla
+                    
+                    const statCard = document.createElement('div'); // Yeni istatistik kartı oluştur
+                    statCard.className = 'category-stat-card'; // CSS sınıfını ata
+                    statCard.innerHTML = `
+                        <h4>🏷️ ${category}</h4>
+                        <div class="stat-amount">${formatCurrency(amount)}</div>
+                        <div style="font-size: 0.9rem; color: #6c757d; margin-top: 5px;">
+                            Toplam giderin %${percentage}'i
+                        </div>
+                    `;
+                    categoryStats.appendChild(statCard); // Kartı alana ekle
+                });
+
+            // Eğer hiç gider yoksa mesaj göster
+            if (Object.keys(expensesByCategory).length === 0) { // Hiç kategori yoksa
+                categoryStats.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #6c757d;">
+                        📊 Henüz hiç gider kaydı yok.
+                    </div>
+                `;
+            }
+        }
+
+        // Basit grafik çizimi (Canvas kullanarak)
+        function drawChart() {
+            const canvas = document.getElementById('incomeExpenseChart');
+            const ctx = canvas.getContext('2d');
+            
+            // Canvas'ı temizle
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const totalIncome = transactions
+                .filter(t => t.type === 'income')
+                .reduce((sum, t) => sum + t.amount, 0);
+                
+            const totalExpense = transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + t.amount, 0);
+
+            const total = totalIncome + totalExpense;
+            
+            if (total === 0) {
+                // Veri yoksa mesaj göster
+                ctx.fillStyle = '#6c757d';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Grafik için veri bekleniyor...', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            // Pasta grafiği çiz
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = Math.min(centerX, centerY) - 20;
+
+            let startAngle = 0;
+
+            // Gelir dilimi
+            if (totalIncome > 0) {
+                const incomeAngle = (totalIncome / total) * 2 * Math.PI;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + incomeAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#28a745';
+                ctx.fill();
+                
+                startAngle += incomeAngle;
+            }
+
+            // Gider dilimi
+            if (totalExpense > 0) {
+                const expenseAngle = (totalExpense / total) * 2 * Math.PI;
+                
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.arc(centerX, centerY, radius, startAngle, startAngle + expenseAngle);
+                ctx.closePath();
+                ctx.fillStyle = '#dc3545';
+                ctx.fill();
+            }
+
+            // Açıklamalar
+            ctx.fillStyle = '#6c757d';
+            ctx.font = '14px Arial';
+            ctx.fillText('📈 Gelir: ' + formatCurrency(totalIncome), centerX - 80, canvas.height - 40);
+            
+            ctx.fillStyle = '#6c757d';
+            ctx.fillText('📉 Gider: ' + formatCurrency(totalExpense), centerX - 80, canvas.height - 20);
+        }
+
+        // Mesaj gösterme
+        function showMessage(message, type) {
+            const messageArea = document.getElementById('messageArea');
+            const messageClass = type === 'success' ? 'success-message' : 'error-message';
+            
+            messageArea.innerHTML = `<div class="${messageClass}">${message}</div>`;
+            
+            // 3 saniye sonra mesajı temizle
+            setTimeout(() => {
+                messageArea.innerHTML = '';
+            }, 3000);
+        }
+
+        // === CSV İŞLEMLERİ ===
+
+        // CSV olarak dışa aktarma
+        function exportToCSV() {
+            if (transactions.length === 0) {
+                showMessage('Dışa aktarılacak veri bulunmuyor!', 'error');
+                return;
+            }
+
+            const headers = ['Tarih', 'Tür', 'Açıklama', 'Kategori', 'Miktar'];
+            const csvContent = [
+                headers.join(','),
+                ...transactions.map(t => [
+                    t.date,
+                    t.type === 'income' ? 'Gelir' : 'Gider',
+                    `"${t.description}"`, // Tırnak içine al
+                    t.category || '',
+                    t.amount
+                ].join(','))
+            ].join('\n');
+
+            // UTF-8 BOM ekle (Türkçe karakterler için)
+            const BOM = '\uFEFF';
+            const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
+            
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', `finans_kayitlari_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            showMessage('CSV dosyası başarıyla indirildi!', 'success');
+        }
+
+        // CSV dosya yükleme
+        function handleCSVUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.name.toLowerCase().endsWith('.csv')) {
+                showMessage('Lütfen geçerli bir CSV dosyası seçin!', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    parseCSVContent(e.target.result);
+                } catch (error) {
+                    showMessage('CSV dosyası okuma hatası: ' + error.message, 'error');
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        // CSV içeriğini ayrıştırma
+        function parseCSVContent(csvContent) {
+            const lines = csvContent.split('\n').filter(line => line.trim());
+            
+            if (lines.length < 2) {
+                showMessage('CSV dosyası geçersiz veya boş!', 'error');
+                return;
+            }
+
+            const headers = lines[0].split(',').map(h => h.trim());
+            let importedCount = 0;
+            let errorCount = 0;
+
+            for (let i = 1; i < lines.length; i++) {
+                try {
+                    const values = parseCSVLine(lines[i]);
+                    
+                    if (values.length >= 5) {
+                        const transaction = {
+                            id: Date.now() + Math.random(), // Benzersiz ID
+                            userId: currentUser.id,
+                            date: values[0],
+                            type: values[1].toLowerCase().includes('gelir') ? 'income' : 'expense',
+                            description: values[2].replace(/"/g, ''), // Tırnakları kaldır
+                            category: values[3] || '',
+                            amount: parseFloat(values[4]),
+                            timestamp: new Date().toISOString()
+                        };
+
+                        // Basit doğrulama
+                        if (transaction.date && transaction.description && transaction.amount > 0) {
+                            transactions.push(transaction);
+                            importedCount++;
+                        } else {
+                            errorCount++;
+                        }
+                    } else {
+                        errorCount++;
+                    }
+                } catch (error) {
+                    errorCount++;
+                }
+            }
+
+            if (importedCount > 0) {
+                saveUserData();
+                updateDisplay();
+                updateCategoryAnalysis();
+                drawChart();
+                showMessage(`${importedCount} kayıt başarıyla içe aktarıldı! ${errorCount > 0 ? `(${errorCount} hatalı satır atlandı)` : ''}`, 'success');
+            } else {
+                showMessage('Hiçbir geçerli kayıt bulunamadı!', 'error');
+            }
+
+            // File input'u sıfırla
+            document.getElementById('csvFileInput').value = '';
+        }
+
+        // CSV satırını ayrıştırma (basit parser)
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            result.push(current.trim());
+            return result;
+        }
+
+        // Sayfa yüklendiğinde çalışacak ek CSS
+        const additionalStyles = `
+            .badge {
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 0.75rem;
+                font-weight: 600;
+            }
+            
+            .badge-success {
+                background-color: #d4edda;
+                color: #155724;
+            }
+            
+            .badge-danger {
+                background-color: #f8d7da;
+                color: #721c24;
+            }
+            
+            .text-success {
+                color: #28a745 !important;
+            }
+            
+            .text-danger {
+                color: #dc3545 !important;
+            }
+            
+            .table-container {
+                max-height: 600px;
+                overflow-y: auto;
+            }
+            
+            .table-container::-webkit-scrollbar {
+                width: 8px;
+            }
+            
+            .table-container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 10px;
+            }
+            
+            .table-container::-webkit-scrollbar-thumb {
+                background: #888;
+                border-radius: 10px;
+            }
+            
+            .table-container::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        `;
+
+        // Ek stilleri head'e ekle
+        const styleSheet = document.createElement('style');
+        styleSheet.textContent = additionalStyles;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

@@ -1,0 +1,517 @@
+        * { /* Tüm elementlerin margin ve padding değerlerini sıfırlıyor */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /* Border ve padding'i width/height'a dahil ediyor */
+        }
+
+        body { /* Body elementinin genel stil ayarları */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Font ailesi */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradient arkaplan */
+            min-height: 100vh; /* Minimum yükseklik viewport yüksekliği */
+            padding: 20px; /* İç boşluk */
+        }
+
+        .container { /* Ana container için stil ayarları */
+            max-width: 1200px; /* Maksimum genişlik */
+            margin: 0 auto; /* Ortalama */
+            background: white; /* Beyaz arkaplan */
+            border-radius: 20px; /* Köşe yuvarlatma */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1); /* Gölge efekti */
+            overflow: hidden; /* Taşan içeriği gizle */
+        }
+        
+        .login-screen { /* Login ekranı için stil ayarları */
+            display: flex; /*flexbox düzen*/
+            justify-content: center; /* Yatay ortalama */
+            align-items: center; /* Dikey ortalama */
+            min-height: 100vh; /* Minimum yükseklik */
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); /* Gradient arkaplan */
+        }
+
+        .login-container { /* Login container stil ayarları */
+            background: white; /* Beyaz arkaplan */
+            padding: 40px; /* İç boşluk */
+            border-radius: 20px; /* Köşe yuvarlatma */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); /* Gölge efekti */
+            width: 100%; /* Tam genişlik */
+            max-width: 400px; /* Maksimum genişlik */
+            text-align: center; /* Metin ortalama */
+        }
+
+        
+        .login-container h1 {/* Login container başlık stil ayarları */
+            color: #2c3e50; /* Metin rengi */
+            margin-bottom: 30px; /* Alt boşluk */
+            font-size: 2rem; /* Font boyutu */
+        }
+
+        .form-group { /* Form grup stil ayarları */
+            margin-bottom: 20px; /* Alt boşluk */
+            text-align: left; /* Metni sola hizala */
+        }
+
+        /* Form grup label stil ayarları */
+        .form-group label {
+            display: block; /* Blok element */
+            margin-bottom: 8px; /* Alt boşluk */
+            font-weight: 600; /* Font kalınlığı */
+            color: #495057; /* Metin rengi */
+        }
+
+        /* Form grup input stil ayarları */
+        .form-group input {
+            width: 100%; /* Tam genişlik */
+            padding: 12px; /* İç boşluk */
+            border: 2px solid #e9ecef; /* Kenarlık */
+            border-radius: 8px; /* Köşe yuvarlatma */
+            font-size: 16px; /* Font boyutu */
+            transition: border-color 0.3s ease; /* Geçiş animasyonu */
+        }
+
+        /* Input focus durumu stil ayarları */
+        .form-group input:focus {
+            outline: none; /* Varsayılan outline'ı kaldır */
+            border-color: #007bff; /* Mavi kenarlık rengi */
+        }
+
+        /* Buton genel stil ayarları */
+        .btn {
+            background: linear-gradient(135deg, #007bff, #0056b3); /* Gradient arkaplan */
+            color: white; /* Beyaz metin */
+            border: none; /* Kenarlık yok */
+            padding: 12px 30px; /* İç boşluk */
+            border-radius: 25px; /* Köşe yuvarlatma */
+            font-size: 16px; /* Font boyutu */
+            cursor: pointer; /* İmleç pointer */
+            transition: all 0.3s ease; /* Geçiş animasyonu */
+            margin: 5px; /* Dış boşluk */
+            width: 100%; /* Tam genişlik */
+        }
+
+        /* Buton hover durumu stil ayarları */
+        .btn:hover {
+            transform: translateY(-2px); /* Yukarı kaydırma */
+            box-shadow: 0 5px 15px rgba(0,123,255,0.3); /* Gölge efekti */
+        }
+
+        /* İkincil buton stil ayarları */
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #495057); /* Gri gradient */
+        }
+
+        /* Başarı butonu stil ayarları */
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #1e7e34); /* Yeşil gradient */
+        }
+
+        /* Tehlike butonu stil ayarları */
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333); /* Kırmızı gradient */
+        }
+
+        /* Çıkış butonu özel stil ayarları */
+        .btn-logout {
+            background: linear-gradient(135deg, #dc3545, #c82333); /* Kırmızı gradient */
+            padding: 8px 20px; /* İç boşluk */
+            font-size: 14px; /* Font boyutu */
+            margin: 0; /* Dış boşluk sıfır */
+            width: auto; /* Otomatik genişlik */
+        }
+
+        /* Header stil ayarları */
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db); /* Gradient arkaplan */
+            color: white; /* Beyaz metin */
+            padding: 30px; /* İç boşluk */
+            display: flex; /* Flexbox düzen */
+            justify-content: space-between; /* Aralarında boşluk */
+            align-items: center; /* Dikey ortalama */
+        }
+
+        /* Header içerik stil ayarları */
+        .header-content h1 {
+            font-size: 2.5rem; /* Font boyutu */
+            margin-bottom: 10px; /* Alt boşluk */
+        }
+
+        /* Header içerik paragraf stil ayarları */
+        .header-content p {
+            font-size: 1.1rem; /* Font boyutu */
+            opacity: 0.9; /* Şeffaflık */
+        }
+
+        /* Kullanıcı bilgi stil ayarları */
+        .user-info {
+            text-align: right; /* Sağa hizala */
+        }
+
+        /* Kullanıcı bilgi başlık stil ayarları */
+        .user-info h3 {
+            margin-bottom: 10px; /* Alt boşluk */
+        }
+
+        /* Ana içerik stil ayarları */
+        .main-content {
+            padding: 30px; /* İç boşluk */
+        }
+
+        /* Özet kartları grid düzeni */
+        .summary-cards {
+            display: grid; /* Grid düzen */
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+            gap: 20px; /* Aralarındaki boşluk */
+            margin-bottom: 30px; /* Alt boşluk */
+        }
+
+        /* Kart genel stil ayarları */
+        .card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef); /* Gradient arkaplan */
+            padding: 25px; /* İç boşluk */
+            border-radius: 15px; /* Köşe yuvarlatma */
+            border-left: 5px solid; /* Sol kenarlık */
+            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Geçiş animasyonu */
+        }
+
+        /* Kart hover durumu */
+        .card:hover {
+            transform: translateY(-5px); /* Yukarı kaydırma */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Gölge efekti */
+        }
+
+        /* Gelir kartı sol kenarlık rengi */
+        .card.income { border-left-color: #28a745; }
+        /* Gider kartı sol kenarlık rengi */
+        .card.expense { border-left-color: #dc3545; }
+        /* Bakiye kartı sol kenarlık rengi */
+        .card.balance { border-left-color: #007bff; }
+
+        /* Kart başlık stil ayarları */
+        .card h3 {
+            font-size: 1.1rem; /* Font boyutu */
+            margin-bottom: 10px; /* Alt boşluk */
+            color: #495057; /* Metin rengi */
+        }
+
+        /* Kart miktar stil ayarları */
+        .card .amount {
+            font-size: 2rem; /* Font boyutu */
+            font-weight: bold; /* Kalın font */
+            color: #212529; /* Metin rengi */
+        }
+
+        /* Grafik container stil ayarları */
+        .chart-container {
+            background: white; /* Beyaz arkaplan */
+            padding: 25px; /* İç boşluk */
+            border-radius: 15px; /* Köşe yuvarlatma */
+            margin: 20px 0; /* Üst-alt boşluk */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Gölge efekti */
+        }
+
+        /* Grafik başlık stil ayarları */
+        .chart-title {
+            font-size: 1.5rem; /* Font boyutu */
+            margin-bottom: 20px; /* Alt boşluk */
+            color: #2c3e50; /* Metin rengi */
+            text-align: center; /* Ortala */
+        }
+
+        /* Grafik canvas boyutlandırma */
+        #incomeExpenseChart {
+            max-width: 400px; /* Maksimum genişlik */
+            margin: 0 auto; /* Ortalama */
+        }
+
+        /* Kategori analiz bölümü stil ayarları */
+        .category-analysis {
+            background: #f8f9fa; /* Açık gri arkaplan */
+            padding: 25px; /* İç boşluk */
+            border-radius: 15px; /* Köşe yuvarlatma */
+            margin: 20px 0; /* Üst-alt boşluk */
+        }
+
+        /* Kategori istatistikleri grid düzeni */
+        .category-stats {
+            display: grid; /* Grid düzen */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 15px; /* Aralarındaki boşluk */
+            margin-top: 20px; /* Üst boşluk */
+        }
+
+        /* Kategori istatistik kartı stil ayarları */
+        .category-stat-card {
+            background: white; /* Beyaz arkaplan */
+            padding: 15px; /* İç boşluk */
+            border-radius: 10px; /* Köşe yuvarlatma */
+            border-left: 4px solid #007bff; /* Sol mavi kenarlık */
+        }
+
+        /* Kategori istatistik kartı başlık */
+        .category-stat-card h4 {
+            color: #2c3e50; /* Metin rengi */
+            margin-bottom: 5px; /* Alt boşluk */
+        }
+
+        /* Kategori istatistik miktar */
+        .category-stat-card .stat-amount {
+            font-size: 1.2rem; /* Font boyutu */
+            font-weight: bold; /* Kalın font */
+            color: #dc3545; /* Kırmızı metin */
+        }
+
+        /* Form bölümü stil ayarları */
+        .form-section {
+            background: #f8f9fa; /* Açık gri arkaplan */
+            padding: 25px; /* İç boşluk */
+            border-radius: 15px; /* Köşe yuvarlatma */
+            margin-bottom: 30px; /* Alt boşluk */
+        }
+
+        /* Form satırı grid düzeni */
+        .form-row {
+            display: grid; /* Grid düzen */
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Responsive grid */
+            gap: 15px; /* Aralarındaki boşluk */
+            margin-bottom: 20px; /* Alt boşluk */
+        }
+
+        /* Form grup select stil ayarları */
+        .form-group select {
+            padding: 12px; /* İç boşluk */
+            border: 2px solid #e9ecef; /* Kenarlık */
+            border-radius: 8px; /* Köşe yuvarlatma */
+            font-size: 16px; /* Font boyutu */
+            transition: border-color 0.3s ease; /* Geçiş animasyonu */
+        }
+
+        /* Select focus durumu */
+        .form-group select:focus {
+            outline: none; /* Varsayılan outline'ı kaldır */
+            border-color: #007bff; /* Mavi kenarlık */
+        }
+
+        /* Veri bölümü stil ayarları */
+        .data-section {
+            margin-top: 30px; /* Üst boşluk */
+        }
+
+        /* Bölüm başlığı stil ayarları */
+        .section-title {
+            font-size: 1.5rem; /* Font boyutu */
+            margin-bottom: 20px; /* Alt boşluk */
+            color: #2c3e50; /* Metin rengi */
+            border-bottom: 3px solid #007bff; /* Alt mavi kenarlık */
+            padding-bottom: 10px; /* Alt iç boşluk */
+        }
+
+        /* Tablo container stil ayarları */
+        .table-container {
+            overflow-x: auto; /* Yatay kaydırma */
+            background: white; /* Beyaz arkaplan */
+            border-radius: 10px; /* Köşe yuvarlatma */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); /* Gölge efekti */
+        }
+
+        /* Tablo genel stil ayarları */
+        table {
+            width: 100%; /* Tam genişlik */
+            border-collapse: collapse; /* Kenarlıkları birleştir */
+        }
+
+        /* Tablo hücre stil ayarları */
+        table th,
+        table td {
+            padding: 15px; /* İç boşluk */
+            text-align: left; /* Sola hizala */
+            border-bottom: 1px solid #e9ecef; /* Alt kenarlık */
+        }
+
+        /* Tablo başlık stil ayarları */
+        table th {
+            background: #f8f9fa; /* Açık gri arkaplan */
+            font-weight: 600; /* Kalın font */
+            color: #495057; /* Metin rengi */
+        }
+
+        /* Tablo satır hover durumu */
+        table tbody tr:hover {
+            background: #f8f9fa; /* Açık gri arkaplan */
+        }
+
+        /* Silme butonu stil ayarları */
+        .delete-btn {
+            background: #dc3545; /* Kırmızı arkaplan */
+            color: white; /* Beyaz metin */
+            border: none; /* Kenarlık yok */
+            padding: 8px 12px; /* İç boşluk */
+            border-radius: 5px; /* Köşe yuvarlatma */
+            cursor: pointer; /* İmleç pointer */
+            font-size: 12px; /* Font boyutu */
+            transition: background 0.3s ease; /* Geçiş animasyonu */
+        }
+
+        /* Silme butonu hover durumu */
+        .delete-btn:hover {
+            background: #c82333; /* Koyu kırmızı */
+        }
+
+        /* Kategori yöneticisi stil ayarları */
+        .category-manager {
+            background: #e3f2fd; /* Açık mavi arkaplan */
+            padding: 20px; /* İç boşluk */
+            border-radius: 10px; /* Köşe yuvarlatma */
+            margin-bottom: 20px; /* Alt boşluk */
+        }
+
+        /* Kategori listesi flex düzeni */
+        .category-list {
+            display: flex; /* Flex düzen */
+            flex-wrap: wrap; /* Sarma */
+            gap: 10px; /* Aralarındaki boşluk */
+            margin-top: 15px; /* Üst boşluk */
+        }
+
+        /* Kategori etiketi stil ayarları */
+        .category-tag {
+            background: #007bff; /* Mavi arkaplan */
+            color: white; /* Beyaz metin */
+            padding: 8px 15px; /* İç boşluk */
+            border-radius: 20px; /* Köşe yuvarlatma */
+            font-size: 14px; /* Font boyutu */
+            display: flex; /* Flex düzen */
+            align-items: center; /* Dikey ortalama */
+            gap: 8px; /* Aralarındaki boşluk */
+        }
+
+        /* Kategori kaldırma butonu stil ayarları */
+        .category-remove {
+            background: rgba(255,255,255,0.3); /* Şeffaf beyaz arkaplan */
+            border: none; /* Kenarlık yok */
+            color: white; /* Beyaz metin */
+            border-radius: 50%; /* Yuvarlak */
+            width: 22px; /* Genişlik */
+            height: 22px; /* Yükseklik */
+            cursor: pointer; /* İmleç pointer */
+            display: flex; /* Flex düzen */
+            align-items: center; /* Dikey ortalama */
+            justify-content: center; /* Yatay ortalama */
+            font-size: 14px; /* Font boyutu */
+        }
+
+        /* Kategori kaldırma butonu hover durumu */
+        .category-remove:hover {
+            background: rgba(255,255,255,0.5); /* Daha opak beyaz */
+        }
+
+        /* Hata mesajı stil ayarları */
+        .error-message {
+            background: #f8d7da; /* Açık kırmızı arkaplan */
+            color: #721c24; /* Koyu kırmızı metin */
+            padding: 10px; /* İç boşluk */
+            border-radius: 5px; /* Köşe yuvarlatma */
+            margin: 10px 0; /* Üst-alt boşluk */
+            border: 1px solid #f5c6cb; /* Açık kırmızı kenarlık */
+        }
+
+        /* Başarı mesajı stil ayarları */
+        .success-message {
+            background: #d4edda; /* Açık yeşil arkaplan */
+            color: #155724; /* Koyu yeşil metin */
+            padding: 10px; /* İç boşluk */
+            border-radius: 5px; /* Köşe yuvarlatma */
+            margin: 10px 0; /* Üst-alt boşluk */
+            border: 1px solid #c3e6cb; /* Açık yeşil kenarlık */
+        }
+
+        /* CSV bölümü stil ayarları */
+        .csv-section {
+            background: #fff3cd; /* Açık sarı arkaplan */
+            padding: 20px; /* İç boşluk */
+            border-radius: 10px; /* Köşe yuvarlatma */
+            margin: 20px 0; /* Üst-alt boşluk */
+            border: 1px solid #ffeaa7; /* Sarı kenarlık */
+        }
+
+        /* Gizli class tanımı */
+        .hidden {
+            display: none; /* Görünmez yap */
+        }
+
+        /* Tablet ve küçük ekranlar için responsive düzenlemeler */
+        @media (max-width: 768px) {
+            /* Header responsive düzenlemesi */
+            .header {
+                flex-direction: column; /* Dikey düzen */
+                text-align: center; /* Ortala */
+                gap: 20px; /* Aralarında boşluk */
+            }
+            
+            /* Header başlık boyutu küçült */
+            .header-content h1 {
+                font-size: 2rem; /* Küçük font boyutu */
+            }
+            
+            /* Ana içerik padding küçült */
+            .main-content {
+                padding: 20px; /* Küçük iç boşluk */
+            }
+            
+            /* Form satırları tek sütun yap */
+            .form-row {
+                grid-template-columns: 1fr; /* Tek sütun */
+            }
+            
+            /* Özet kartları tek sütun yap */
+            .summary-cards {
+                grid-template-columns: 1fr; /* Tek sütun */
+            }
+            
+            /* Kategori istatistikleri tek sütun yap */
+            .category-stats {
+                grid-template-columns: 1fr; /* Tek sütun */
+            }
+            
+            /* Tablo font boyutu küçült */
+            table {
+                font-size: 14px; /* Küçük font */
+            }
+            
+            /* Tablo hücre padding küçült */
+            table th,
+            table td {
+                padding: 10px; /* Küçük iç boşluk */
+            }
+        }
+
+        /* Mobil telefonlar için responsive düzenlemeler */
+        @media (max-width: 480px) {
+            /* Body padding küçült */
+            body {
+                padding: 10px; /* Küçük iç boşluk */
+            }
+            
+            /* Login container padding küçült */
+            .login-container {
+                padding: 30px 20px; /* Küçük iç boşluk */
+            }
+            
+            /* Header padding küçült */
+            .header {
+                padding: 20px; /* Küçük iç boşluk */
+            }
+            
+            /* Header başlık daha da küçült */
+            .header-content h1 {
+                font-size: 1.5rem; /* En küçük font boyutu */
+            }
+            
+            /* Ana içerik padding daha da küçült */
+            .main-content {
+                padding: 15px; /* En küçük iç boşluk */
+            }
+            
+            /* Kart miktar font boyutu küçült */
+            .card .amount {
+                font-size: 1.5rem; /* Küçük font boyutu */
+            }
+        }
